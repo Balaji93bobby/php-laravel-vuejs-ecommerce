@@ -28,7 +28,7 @@ class ProductRequest extends FormRequest
             "name"          => "required|unique:products,name,{$id},id",
             "description"   => "max:1000",
             "category_id"   => "required|exists:categories,id",
-            "image"         => "image"
+            //"image"         => "image"
         ];
     }
 }
