@@ -24,6 +24,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Image</th>
                 <th>Category</th>
                 <th width="150">Actions</th>
             </tr>
@@ -32,7 +33,12 @@
             <tr v-for="(product, index) in products.data" :key="index">
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
+                <td>{{ product.image }}</td>
+                <td>
+                    <div v-if="product.image">
+                        <img :src="[`/storage/products/${product.image}`]" :alt="product.image" class="img">
+                    </div>
+                </td>
                 <td>{{ product.category_id }}</td>
                 <td>
                     <div class="fleft">
@@ -160,7 +166,6 @@ export default {
 </script>
 
 <style scoped>
-    .fleft  {
-        float:left;
-    }
+    .fleft  {float:left;}
+    .img {max-width: 100px}
 </style>

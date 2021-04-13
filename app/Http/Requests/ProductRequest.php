@@ -23,12 +23,12 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->segment(3);
+        $id = $this->segment(4);
         return [
             "name"          => "required|unique:products,name,{$id},id",
             "description"   => "max:1000",
             "category_id"   => "required|exists:categories,id",
-            //"image"         => "image"
+            "image"         => "image"
         ];
     }
 }

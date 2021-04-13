@@ -2398,6 +2398,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2543,6 +2549,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormProductComponent",
   props: {
@@ -2561,10 +2580,16 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var action = this.updated ? "updateProduct" : "storeProduct";
-      this.$store.dispatch(action, this.product).then(function () {
+      var formData = new FormData();
+      if (this.upload != null) formData.append('image', this.upload);
+      formData.append('id', this.product.id);
+      formData.append('name', this.product.name);
+      formData.append('description', this.product.description);
+      formData.append('category_id', this.product.category_id);
+      this.$store.dispatch(action, formData).then(function () {
         _this.$snotify.success('Product Saved!');
 
-        _this.errors = {};
+        _this.reset();
 
         _this.$emit('success');
       })["catch"](function (error) {
@@ -2574,6 +2599,32 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error.response.data.errors);
         _this.errors = error.response.data.errors;
       });
+    },
+    reset: function reset() {
+      this.errors = {};
+      this.imagePreview = null;
+      this.upload = null;
+    },
+    onFileChange: function onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.upload = files[0];
+      this.previewImage(files[0]);
+    },
+    previewImage: function previewImage(file) {
+      var _this2 = this;
+
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        _this2.imagePreview = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    },
+    removePreviewImage: function removePreviewImage() {
+      this.imagePreview = null;
+      this.upload = null;
     }
   },
   computed: {
@@ -2583,7 +2634,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      errors: {}
+      errors: {},
+      upload: null,
+      imagePreview: null
     };
   }
 });
@@ -3009,6 +3062,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _configs_configs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../configs/configs */ "./resources/js/configs/configs.js");
 
 
+var CONFIGS = {
+  headers: {
+    'content-type': 'multipart/form-data'
+  }
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   loadProducts: function loadProducts(context, params) {
     context.commit('PRELOADER', true);
@@ -3036,10 +3094,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     });
   },
-  storeProduct: function storeProduct(context, params) {
+  storeProduct: function storeProduct(context, formData) {
     context.commit('PRELOADER', true);
     return new Promise(function (resolve, reject) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_configs_configs__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "products"), params).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_configs_configs__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "products"), formData, CONFIGS).then(function (response) {
         return resolve();
       })["catch"](function (error) {
         console.log(error.response);
@@ -3047,14 +3105,19 @@ __webpack_require__.r(__webpack_exports__);
       }); //.finally(() => context.commit('PRELOADER', false))
     });
   },
-  updateProduct: function updateProduct(context, params) {
+  updateProduct: function updateProduct(context, formData) {
     context.commit('PRELOADER', true);
+    formData.append('_method', 'PUT');
     return new Promise(function (resolve, reject) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(_configs_configs__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "products/").concat(params.id), params).then(function (response) {
+      console.log('formData');
+      console.log(formData);
+      alert('aki');
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_configs_configs__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "products/").concat(formData.get('id')), formData).then(function (response) {
         return resolve();
       })["catch"](function (error) {
         context.commit('PRELOADER', false);
-        reject(error);
+        console.log(error.response);
+        reject(error.response);
       });
     });
   },
@@ -7693,7 +7756,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.fleft[data-v-4df0c164]  {\n    float:left;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.fleft[data-v-4df0c164]  {float:left;}\n.img[data-v-4df0c164] {max-width: 100px}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7717,7 +7780,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.has-error[data-v-d9bfea8c] { color: red;\n}\n.has-error input[data-v-d9bfea8c] { border: 1px solid red;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.has-error[data-v-d9bfea8c] { color: red;\n}\n.has-error input[data-v-d9bfea8c] { border: 1px solid red;\n}\n.image-preview[data-v-d9bfea8c] { max-width: 60px;}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -40530,7 +40593,21 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(product.name))]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(product.description))]),
+              _c("td", [_vm._v(_vm._s(product.image))]),
+              _vm._v(" "),
+              _c("td", [
+                product.image
+                  ? _c("div", [
+                      _c("img", {
+                        staticClass: "img",
+                        attrs: {
+                          src: ["/storage/products/" + product.image],
+                          alt: product.image
+                        }
+                      })
+                    ])
+                  : _vm._e()
+              ]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(product.category_id))]),
               _vm._v(" "),
@@ -40587,6 +40664,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Description")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Image")]),
         _vm._v(" "),
         _c("th", [_vm._v("Category")]),
         _vm._v(" "),
@@ -40663,6 +40742,53 @@ var render = function() {
             }
           })
         ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { class: ["form-group", { "has-error": _vm.errors.image }] },
+          [
+            _vm.errors.image
+              ? _c("div", [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.errors.image[0]) +
+                      "\n            "
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.imagePreview
+              ? _c("div", [
+                  _c("img", {
+                    staticClass: "image-preview",
+                    attrs: { src: _vm.imagePreview }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.removePreviewImage($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Remove")]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", [
+              _c("input", {
+                staticClass: "form-control",
+                attrs: { type: "file" },
+                on: { change: _vm.onFileChange }
+              })
+            ])
+          ]
+        ),
         _vm._v(" "),
         _c(
           "div",

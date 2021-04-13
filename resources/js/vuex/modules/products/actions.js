@@ -1,6 +1,12 @@
 import axios from "axios";
 import { URL_BASE } from '../../../configs/configs'
 
+const CONFIGS = {
+    headers: {
+        'content-type': 'multipart/form-data'
+    }
+}
+
 export default {
     loadProducts (context, params) {
         context.commit('PRELOADER', true)
@@ -28,10 +34,10 @@ export default {
         })
     },
 
-    storeProduct (context, params) {
+    storeProduct (context, formData) {
         context.commit('PRELOADER', true)
         return new Promise((resolve, reject) => {
-            axios.post(`${URL_BASE}products`, params)
+            axios.post(`${URL_BASE}products`, formData, CONFIGS)
                 .then(response => resolve())
                 .catch(error => {
                     console.log(error.response)
@@ -41,14 +47,19 @@ export default {
         })
     },
 
-    updateProduct (context, params) {
+    updateProduct (context, formData) {
         context.commit('PRELOADER', true)
+        formData.append('_method', 'PUT')
         return new Promise((resolve, reject) => {
-            axios.put(`${URL_BASE}products/${params.id}`, params)
+            console.log('formData')
+            console.log(formData)
+            alert('aki')
+            axios.post(`${URL_BASE}products/${formData.get('id')}`, formData)
                 .then(response => resolve())
                 .catch(error => {
                     context.commit('PRELOADER', false)
-                    reject(error)
+                    console.log(error.response)
+                    reject(error.response)
                 })
         })
     },

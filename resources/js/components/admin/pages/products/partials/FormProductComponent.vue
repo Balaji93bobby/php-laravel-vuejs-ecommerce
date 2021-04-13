@@ -8,6 +8,19 @@
                 <input type="text" class="form-control" v-model="product.name" placeholder="Enter the Name">
             </div>
 
+            <div :class="['form-group', {'has-error': errors.image}]">
+                <div v-if="errors.image">
+                    {{ errors.image[0]}}
+                </div>
+                <div v-if="imagePreview">
+                    <img :src="imagePreview" class="image-preview">
+                    <button class="btn btn-danger" @click.prevent="removePreviewImage">Remove</button>
+                </div>
+                <div>
+                    <input type="file" class="form-control" @change="onFileChange">
+                </div>
+            </div>
+
             <div :class="['form-group', {'has-error': errors.description}]">
                 <div v-if="errors.description">
                     {{ errors.description[0]}}
@@ -49,10 +62,20 @@ export default {
     methods: {
         onSubmit () {
             let action = this.updated ? "updateProduct" : "storeProduct"
-            this.$store.dispatch(action, this.product)
+
+            const formData = new FormData ()
+            if (this.upload != null)
+                formData.append('image', this.upload)
+
+            formData.append('id', this.product.id)
+            formData.append('name', this.product.name)
+            formData.append('description', this.product.description)
+            formData.append('category_id', this.product.category_id)
+
+            this.$store.dispatch(action, formData)
                 .then(() => {
                     this.$snotify.success('Product Saved!')
-                    this.errors = {}
+                    this.reset()
                     this.$emit('success')
                 })
                 .catch(error => {
@@ -62,6 +85,34 @@ export default {
                     this.errors = error.response.data.errors
                 })
         },
+
+        reset () {
+            this.errors = {}
+            this.imagePreview = null
+            this.upload = null
+        },
+
+        onFileChange (e) {
+            let files = e.target.files || e.dataTransfer.files
+            if (!files.length)
+                return
+            this.upload = files[0]
+
+            this.previewImage(files[0])
+        },
+
+        previewImage (file) {
+            let reader = new FileReader()
+            reader.onload = (e) => {
+                this.imagePreview = e.target.result
+            }
+            reader.readAsDataURL(file)
+        },
+
+        removePreviewImage () {
+            this.imagePreview = null
+            this.upload = null
+        }
     },
     computed: {
         categories () {
@@ -70,7 +121,9 @@ export default {
     },
     data () {
         return {
-            errors: {}
+            errors: {},
+            upload: null,
+            imagePreview: null,
         }
     }
 }
@@ -79,4 +132,5 @@ export default {
 <style scoped>
     .has-error { color: red; }
     .has-error input { border: 1px solid red; }
+    .image-preview { max-width: 60px;}
 </style>
