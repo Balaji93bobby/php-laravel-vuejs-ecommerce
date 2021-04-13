@@ -3073,7 +3073,6 @@ var CONFIGS = {
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(_configs_configs__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "products"), {
       params: params
     }).then(function (response) {
-      console.log(response);
       context.commit('LOAD_PRODUCTS', response.data);
     })["catch"](function (errors) {
       console.log(errors);
@@ -3102,16 +3101,13 @@ var CONFIGS = {
       })["catch"](function (error) {
         console.log(error.response);
         reject(error);
-      }); //.finally(() => context.commit('PRELOADER', false))
+      });
     });
   },
   updateProduct: function updateProduct(context, formData) {
     context.commit('PRELOADER', true);
     formData.append('_method', 'PUT');
     return new Promise(function (resolve, reject) {
-      console.log('formData');
-      console.log(formData);
-      alert('aki');
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_configs_configs__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "products/").concat(formData.get('id')), formData).then(function (response) {
         return resolve();
       })["catch"](function (error) {

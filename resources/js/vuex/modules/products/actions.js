@@ -12,7 +12,6 @@ export default {
         context.commit('PRELOADER', true)
         axios.get(`${URL_BASE}products`, {params})
             .then(response => {
-                console.log(response)
                 context.commit('LOAD_PRODUCTS', response.data)
             })
             .catch(errors => {
@@ -43,7 +42,6 @@ export default {
                     console.log(error.response)
                     reject(error)
                 })
-                //.finally(() => context.commit('PRELOADER', false))
         })
     },
 
@@ -51,9 +49,6 @@ export default {
         context.commit('PRELOADER', true)
         formData.append('_method', 'PUT')
         return new Promise((resolve, reject) => {
-            console.log('formData')
-            console.log(formData)
-            alert('aki')
             axios.post(`${URL_BASE}products/${formData.get('id')}`, formData)
                 .then(response => resolve())
                 .catch(error => {

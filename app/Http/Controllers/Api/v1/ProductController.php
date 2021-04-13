@@ -99,8 +99,7 @@ class ProductController extends Controller
             if (!$upload)
                 return response()->json(['error' => 'Fail Upload'], 500);
         }
-
-        $product->update($request->all());
+        $product->update($data);
 
         return response()->json($product);
     }
