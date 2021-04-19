@@ -12,7 +12,7 @@ class Product extends Model
 
     public function getResults(array $data, int $totalPage)
     {
-        if (!isset($data['filter']) && !isset($data['name']) && !isset($data['description']))
+        if (!isset($data['filter']) && !isset($data['name']) && !isset($data['description']) && !isset($data['category_id']))
             return $this->paginate(10);
 
         return $this->where(function ($query) use ($data) {
@@ -24,6 +24,9 @@ class Product extends Model
 
                     if (isset($data['name']))
                         $query->where('name', $data['name']);
+
+                    if (isset($data['category_id']))
+                        $query->where('category_id', $data['category_id']);
 
                     if (isset($data['description'])) {
                         $description = $data['description'];
