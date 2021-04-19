@@ -11,6 +11,7 @@ import MainLayoutComponent from "../components/frontend/MainLayoutComponent";
 import HomeComponent from "../components/frontend/pages/home/HomeComponent";
 import ContactComponent from "../components/frontend/pages/contact/ContactComponent";
 import ProductDetailComponent from "../components/frontend/pages/product/ProductDetailComponent";
+import CartComponent from "../components/frontend/pages/cart/CartComponent";
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,7 @@ const routes = [
             {path: '', component: HomeComponent, name: 'home'},
             {path: '/contact', component: ContactComponent, name: 'contact'},
             {path: '/product/:id', component: ProductDetailComponent, name: 'product.detail', props:true},
+            {path: 'cart', component: CartComponent, name: 'cart'}
         ]
     },
     {
